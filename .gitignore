@@ -35,3 +35,8 @@
 .ipynb_checkpoints/*
 **/build/*
 example/__pycache__
+
+.cache/
+.idea/
+.vscode/
+typings/

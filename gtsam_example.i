@@ -18,6 +18,8 @@
 
 #include <cpp/greeting.h>
 
+#include <cpp/CustomFactor.h>
+
 // The namespace should be the same as in the c++ source code.
 namespace gtsam_example {
 
@@ -35,6 +37,13 @@ class Greeting {
 
   void insertName(const string& name);
   string operator[](size_t idx) const;
+};
+
+class CustomFactor: gtsam::NonlinearFactor {
+  CustomFactor();
+
+  CustomFactor(const gtsam::SharedNoiseModel& noiseModel, const gtsam::KeyVector& keys, const gtsam_example::CustomErrorFunction& errorFunction);
+
 };
 
 }  // namespace gtsam_example
