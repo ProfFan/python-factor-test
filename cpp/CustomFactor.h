@@ -56,18 +56,7 @@ public:
   /** Calls the errorFunction closure, which is a std::function object
     * One can check if a derivative is needed in the errorFunction by checking the length of Jacobian array
   */
-  Vector unwhitenedError(const Values& x, boost::optional<std::vector<Matrix>&> H = boost::none) const override {
-    if(this->active(x)) {
-      if(H) {
-        return this->errorFunction(*this, x, H.get_ptr());
-      } else {
-        JacobianVector dummy;
-        return this->errorFunction(*this, x, &dummy);
-      }
-    } else {
-      return Vector::Zero(this->dim());
-    }
-  }
+  Vector unwhitenedError(const Values& x, boost::optional<std::vector<Matrix>&> H = boost::none) const override;
 
 private:
 

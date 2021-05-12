@@ -23,21 +23,23 @@ from gtsam.utils.test_case import GtsamTestCase
 class TestCustomFactor(GtsamTestCase):
 
     def test_new(self):
-        def error_func(this, v: gtsam.Values, H: List[np.ndarray]):
+        def error_func(this: CustomFactor, v: gtsam.Values, H: List[np.ndarray]):
             return np.array([1, 0, 0])
         
-        cf = ge.CustomFactor(gtsam.noiseModel.Unit.Create(3), gtsam.KeyVector([0]), error_func)
+        noise_model = gtsam.noiseModel.Unit.Create(3)
+        cf = ge.CustomFactor(noise_model, gtsam.KeyVector([0]), error_func)
 
     def test_call(self):
 
         expected_pose = Pose2(1, 1, 0)
 
-        def error_func(this: CustomFactor, v: gtsam.Values, H: List[np.ndarray]):
+        def error_func(this: CustomFactor, v: gtsam.Values, H: List[np.ndarray]) -> np.ndarray:
             key0 = this.keys()[0]
             error = -v.atPose2(key0).localCoordinates(expected_pose)
             return error
         
-        cf = ge.CustomFactor(gtsam.noiseModel.Unit.Create(3), gtsam.KeyVector([0]), error_func)
+        noise_model = gtsam.noiseModel.Unit.Create(3)
+        cf = ge.CustomFactor(noise_model, gtsam.KeyVector([0]), error_func)
         v = Values()
         v.insert(0, Pose2(1, 0, 0))
         e = cf.error(v)
@@ -66,12 +68,13 @@ class TestCustomFactor(GtsamTestCase):
                 H[1] = np.eye(3)
             return error
         
-        cf = ge.CustomFactor(gtsam.noiseModel.Unit.Create(3), gtsam.KeyVector([0, 1]), error_func)
+        noise_model = gtsam.noiseModel.Unit.Create(3)
+        cf = ge.CustomFactor(noise_model, gtsam.KeyVector([0, 1]), error_func)
         v = Values()
         v.insert(0, gT1)
         v.insert(1, gT2)
         
-        bf = gtsam.BetweenFactorPose2(0, 1, Pose2(0, 0, 0), gtsam.noiseModel.Unit.Create(3))
+        bf = gtsam.BetweenFactorPose2(0, 1, Pose2(0, 0, 0), noise_model)
 
         gf = cf.linearize(v)
         gf_b = bf.linearize(v)

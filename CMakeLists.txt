@@ -24,7 +24,7 @@ include_directories(BEFORE "${PROJECT_SOURCE_DIR}")
 # ##############################################################################
 # * 4. Build static library from common sources. This is a common cmake step
 #   where we load all the source files and link against the GTSAM library.
-add_library(${PROJECT_NAME} SHARED cpp/greeting.h cpp/greeting.cpp cpp/CustomFactor.cpp cpp/CustomFactor.h)
+add_library(${PROJECT_NAME} SHARED cpp/greeting.h cpp/greeting.cpp cpp/CustomFactor.h cpp/CustomFactor.cpp)
 target_link_libraries(${PROJECT_NAME} gtsam)
 
 # ##############################################################################
