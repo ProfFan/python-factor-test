@@ -17,6 +17,13 @@ class CustomFactor;
 
 typedef std::function<Vector(const CustomFactor&, const Values&, const JacobianVector*)> CustomErrorFunction;
 
+/**
+ * @brief Custom factor that takes a std::function as the error
+ * @addtogroup nonlinear
+ * \nosubgrouping
+ *
+ * This factor is mainly for creating a custom factor in Python.
+ */
 class CustomFactor: public NoiseModelFactor {
 public:
    CustomErrorFunction errorFunction;
@@ -36,8 +43,8 @@ public:
   /**
    * Constructor
    * @param noiseModel shared pointer to noise model
-   * @param j1 key of the first variable
-   * @param j2 key of the second variable
+   * @param keys keys of the variables
+   * @param errorFunction the error functional
    */
   CustomFactor(const SharedNoiseModel& noiseModel, const KeyVector& keys, const CustomErrorFunction& errorFunction) :
       Base(noiseModel, keys) {
@@ -46,8 +53,9 @@ public:
 
   ~CustomFactor() override = default;
 
-  /** Calls the 2-key specific version of evaluateError, which is pure virtual
-   * so must be implemented in the derived class. */
+  /** Calls the errorFunction closure, which is a std::function object
+    * One can check if a derivative is needed in the errorFunction by checking the length of Jacobian array
+  */
   Vector unwhitenedError(const Values& x, boost::optional<std::vector<Matrix>&> H = boost::none) const override {
     if(this->active(x)) {
       if(H) {
